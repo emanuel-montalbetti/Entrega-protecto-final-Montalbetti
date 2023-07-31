@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bienvenido a Sports</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <h1>Bienvenido a sportia</h1>
+    <h2>Seleccione los productos que desea:</h2>
+
+    <div class="cajaProducto" nombreItem="Tibieras para MMA" valorItem="30000">
+        <img src="img/tibiales.jpg" alt="Tibieras para MMA">
+        <h3>Tibieras para MMA</h3>
+        <p>Valor: $<span class="product-value">30000</span></p>
+        <button class="add-to-cart">Agregar a carrito</button>
+    </div>
+    <div class="cajaProducto" nombreItem="Guantines para MMA" valorItem="22300">
+        <img src="img/guantin-mma.jpg" alt="Guantines para MMA">
+        <h3>Guantines para MMA</h3>
+        <p>Valor: $<span class="product-value">22300</span></p>
+        <button class="add-to-cart">Agregar a carrito</button>
+    </div>
+    <div class="cajaProducto" nombreItem="Vendas de boxeo" valorItem="12000">
+        <img src="img/venda-boxeo.jpg" alt="Vendas de boxeo">
+        <h3>Vendas de boxeo</h3>
+        <p>Valor: $<span class="product-value">12000</span></p>
+        <button class="add-to-cart">Agregar a carrito</button>
+    </div>
+    <div class="cajaProducto" nombreItem="Guantes de boxeo" valorItem="65000">
+        <img src="img/guantes-de-boxeo.jpg" alt="Guantes de boxeo">
+        <h3>Guantes de boxeo</h3>
+        <p>Valor: $<span class="product-value">65000</span></p>
+        <button class="add-to-cart">Agregar a carrito</button>
+    </div>
+    <div class="cajaProducto" nombreItem="heavybag" valorItem="35500">
+        <img src="img/heavybag.jpg" alt="heavybag">
+        <h3>heavybag</h3>
+        <p>Valor: $<span class="product-value">35500</span></p>
+        <button class="add-to-cart">Agregar a carrito</button>
+    </div>
+
+    <div id="cart">
+        <h2>Carrito de compras</h2>
+        <ul id="itemCarrito"></ul>
+        <p id="totalCarrito">Total: $<span id="total-value">0</span></p>
+        <button id="clear-cart">Vaciar carrito</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

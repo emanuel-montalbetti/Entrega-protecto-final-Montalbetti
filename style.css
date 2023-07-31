@@ -1,0 +1,44 @@
+body {
+    background-color: black;
+    color: white;
+}
+
+h1 {
+    color: red;
+}
+
+.cajaProducto {
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#cart {
+    border: 1px solid red;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+#itemCarrito {
+    list-style-type: none;
+    padding: 0;
+}
+
+#totalCarrito {
+    font-weight: bold;
+}
+
+.cajaProducto img {
+    max-width: 200px;
+}
+
+
+.imgCarritoItem {
+    max-width: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.nombreCarritoItem {
+    font-weight: bold;
+}
+
