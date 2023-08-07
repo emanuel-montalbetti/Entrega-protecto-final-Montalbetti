@@ -1,6 +1,9 @@
 body {
     background-color: black;
     color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
@@ -11,15 +14,23 @@ h1 {
     border: 1px solid red;
     padding: 10px;
     margin-bottom: 10px;
+    display: inline-block;
+    vertical-align: top;
+    width: calc(33.33% - 20px);
+    box-sizing: border-box;
 }
 
-#cart {
+.cajaProducto img {
+    max-width: 100%;
+}
+
+#carrito {
     border: 1px solid red;
     padding: 10px;
     margin-top: 20px;
 }
 
-#itemCarrito {
+#itemsCarrito {
     list-style-type: none;
     padding: 0;
 }
@@ -28,17 +39,15 @@ h1 {
     font-weight: bold;
 }
 
-.cajaProducto img {
-    max-width: 200px;
+.agregar-al-carrito {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-
-.imgCarritoItem {
-    max-width: 50px;
-    vertical-align: middle;
-    margin-right: 10px;
+.agregar-al-carrito:hover {
+    background-color: darkred;
 }
-.nombreCarritoItem {
-    font-weight: bold;
-}
-

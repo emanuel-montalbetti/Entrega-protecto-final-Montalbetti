@@ -1,96 +1,119 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const products = [
-        { name: "Tibieras para MMA", value: 30000 },
-        { name: "Guantines para MMA", value: 22300 },
-        { name: "Vendas de boxeo", value: 12000 },
-        { name: "Guantes de boxeo", value: 65000 },
-        { name: "heavybag", value: 35500 },
+document.addEventListener("DOMContentLoaded", async function() {
+    const productos = [
+        { nombre: "Tobilleras para MMA", valor: 30000 },
+        { nombre: "Guantines para MMA", valor: 22300 },
+        { nombre: "Vendas de boxeo", valor: 12000 },
+        { nombre: "Guantes de boxeo", valor: 65000 },
+        { nombre: "Saco de entrenamiento", valor: 35500 },
     ];
-
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
-    const addToCart = (product) => {
-        const existingItem = cartItems.find(item => item.name === product.name);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cartItems.push({ ...product, quantity: 1 });
+    const url = 'https://forecast9.p.rapidapi.com/';
+    const options = {
+        method: 'GET',
+        headers: {
+            'X-RapidAPI-Key': 'b161d24a36mshb2c3d9b2624270cp13034fjsn0f21592aa88b',
+            'X-RapidAPI-Host': 'forecast9.p.rapidapi.com'
         }
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        updateCart();
     };
 
-    const removeFromCart = (index) => {
-        cartItems.splice(index, 1);
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-        updateCart();
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+
+        const climaContainer = document.getElementById("clima-container");
+
+        // Mostrar los resultados en el contenedor
+        if (result.current) {
+            climaContainer.innerHTML = `
+                <h2>Informe del clima</h2>
+                <p>Ubicación: ${result.location || 'Ubicación no disponible'}</p>
+                <p>Temperatura: ${result.current.temp_f !== undefined ? result.current.temp_f + '°F' : 'Temperatura no disponible'}</p>
+                <p>Condición: ${result.current.condition.text || 'Condición no disponible'}</p>
+            `;
+        } else {
+            climaContainer.innerHTML = '<p>Información del clima no disponible.</p>';
+        }
+
+    } catch (error) {
+        console.error(error);
+    }
+    const itemsCarrito = JSON.parse(localStorage.getItem("itemsCarrito")) || [];
+
+    const agregarAlCarrito = (producto) => {
+        const itemExistente = itemsCarrito.find(item => item.nombre === producto.nombre);
+        if (itemExistente) {
+            itemExistente.cantidad += 1;
+        } else {
+            itemsCarrito.push({ ...producto, cantidad: 1 });
+        }
+        localStorage.setItem("itemsCarrito", JSON.stringify(itemsCarrito));
+        actualizarCarrito();
     };
 
-    const clearCart = () => {
-        cartItems.length = 0;
-        localStorage.removeItem("cartItems");
-        updateCart();
+    const removerDelCarrito = (indice) => {
+        itemsCarrito.splice(indice, 1);
+        localStorage.setItem("itemsCarrito", JSON.stringify(itemsCarrito));
+        actualizarCarrito();
     };
 
-    const updateCart = () => {
-        const cartItemsElement = document.getElementById("itemCarrito");
-        const cartTotalElement = document.getElementById("totalCarrito");
-        const totalValueElement = document.getElementById("total-value");
+    const vaciarCarrito = () => {
+        Swal.fire({
+            title: "Vaciar carrito",
+            text: "¿Estás seguro de que deseas vaciar el carrito?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, vaciar",
+            cancelButtonText: "Cancelar",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                itemsCarrito.length = 0;
+                localStorage.removeItem("itemsCarrito");
+                actualizarCarrito();
+                Swal.fire("Carrito vaciado", "El carrito ha sido vaciado correctamente.", "success");
+            }
+        });
+    };
 
-        cartItemsElement.innerHTML = "";
+    const actualizarCarrito = () => {
+        const itemsCarritoContainer = document.getElementById("itemsCarrito");
+        const totalCarritoContainer = document.getElementById("total-valor");
+
+        itemsCarritoContainer.innerHTML = "";
         let total = 0;
 
-        for (const [index, item] of cartItems.entries()) {
+        itemsCarrito.forEach((item, indice) => {
+            total += item.valor * item.cantidad;
+
             const li = document.createElement("li");
-            const img = document.createElement("img");
-            const productName = document.createElement("span");
-            const productValue = document.createElement("span");
-            const productQuantity = document.createElement("span");
+            li.innerHTML = `
+                ${item.nombre} - Cantidad: ${item.cantidad} - 
+                Subtotal: $${item.valor * item.cantidad} 
+                <button class="remover-del-carrito" data-indice="${indice}">Remover</button>
+            `;
+            itemsCarritoContainer.appendChild(li);
+        });
 
-            img.src = `img/${item.name.toLowerCase().replace(/ /g, "-")}.jpg`;
-            img.alt = item.name;
-            img.classList.add("imgCarritoItem");
-            productName.textContent = item.name;
-            productName.classList.add("nombreCarritoItem");
-            productValue.textContent = item.value;
-            productValue.classList.add("cart-product-value");
-            productQuantity.textContent = item.quantity;
-            productQuantity.classList.add("cart-product-quantity");
-
-            li.appendChild(img);
-            li.appendChild(productName);
-            li.appendChild(document.createTextNode(" - Valor: $"));
-            li.appendChild(productValue);
-            li.appendChild(document.createTextNode(" - Cantidad: "));
-            li.appendChild(productQuantity);
-
-            cartItemsElement.appendChild(li);
-
-            const removeButton = document.createElement("button");
-            removeButton.textContent = "Eliminar";
-            removeButton.addEventListener("click", () => {
-                removeFromCart(index);
+        totalCarritoContainer.textContent = total;
+        
+        const botonesRemover = document.querySelectorAll(".remover-del-carrito");
+        botonesRemover.forEach(boton => {
+            boton.addEventListener("click", (event) => {
+                const indice = event.target.getAttribute("data-indice");
+                removerDelCarrito(indice);
             });
-            li.appendChild(removeButton);
-
-            total += item.value * item.quantity;
-        }
-
-        totalValueElement.textContent = total;
+        });
     };
 
-    const buttons = document.querySelectorAll(".add-to-cart");
-
-    buttons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-            addToCart(products[index]);
+    const botonesAgregar = document.querySelectorAll(".agregar-al-carrito");
+    botonesAgregar.forEach((boton, indice) => {
+        boton.addEventListener("click", () => {
+            agregarAlCarrito(productos[indice]);
         });
     });
 
-    const clearCartButton = document.getElementById("clear-cart");
-    clearCartButton.addEventListener("click", () => {
-        clearCart();
+    const botonVaciarCarrito = document.getElementById("vaciar-carrito");
+    botonVaciarCarrito.addEventListener("click", () => {
+        vaciarCarrito();
     });
 
-    updateCart();
+    actualizarCarrito();
 });
